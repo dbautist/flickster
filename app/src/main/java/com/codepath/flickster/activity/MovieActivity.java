@@ -81,9 +81,10 @@ public class MovieActivity extends AppCompatActivity {
   private void getNowPlayingList() {
     movieCatalog.getNowPlayingMovieList(new MovieCatalog.MovieCatalogHandler() {
       @Override
-      public void onRequestSuccess(List<Movie> movieList) {
-        Log.d(TAG, "Updating now playing list");
+      public void onRequestSuccess(List requestList) {
+        Log.d(TAG, "Getting now playing list");
 
+        List<Movie> movieList = requestList;
         adapter.clear();
         nowPlayingMovieList.addAll(movieList);
         adapter.notifyDataSetChanged();
@@ -91,11 +92,6 @@ public class MovieActivity extends AppCompatActivity {
         if (swipeContainer.isRefreshing()) {
           swipeContainer.setRefreshing(false);
         }
-      }
-
-      @Override
-      public void onRequestSuccess2(List<Trailer> trailerList) {
-
       }
 
       @Override
@@ -112,14 +108,14 @@ public class MovieActivity extends AppCompatActivity {
   }
 
   private void getMovieQuickPlay(Movie movie) {
+    Log.d(TAG, "Fetching movie trailer on listItemClick");
+
     movieCatalog.getMovieTrailerList(movie.getId(), new MovieCatalog.MovieCatalogHandler() {
       @Override
-      public void onRequestSuccess(List<Movie> movieList) {
+      public void onRequestSuccess(List requestList) {
+        Log.d(TAG, "Getting movie trailer list");
 
-      }
-
-      @Override
-      public void onRequestSuccess2(List<Trailer> trailerList) {
+        List<Trailer> trailerList = requestList;
         if (trailerList != null && trailerList.size() > 0) {
           gotoMovieQuickPlay(trailerList.get(0));
         }
@@ -127,7 +123,7 @@ public class MovieActivity extends AppCompatActivity {
 
       @Override
       public void onRequestFailure() {
-
+        // TODO: toast message or something...
       }
     });
   }

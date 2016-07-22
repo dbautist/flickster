@@ -1,15 +1,16 @@
 package com.codepath.flickster.models;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.List;
 
-public class Movie implements Serializable {
+public class Movie implements JSONSerializable, Serializable {
   private static final String TAG = Movie.class.getSimpleName();
   private static final String BASE_URL = "https://image.tmdb.org/t/p/";
   private static final int POPULAR_VOTE_THRESHOLD = 5;
@@ -25,14 +26,14 @@ public class Movie implements Serializable {
   private float rating;
   private Trailer trailer;
 
-  public Movie(JSONObject jsonObject) throws JSONException {
+  @Override
+  public void configureFromJSON(JSONObject jsonObject) throws JSONException {
     this.id = jsonObject.getString("id");
     this.posterPath = jsonObject.getString("poster_path");
     this.originalTitle = jsonObject.getString("original_title");
     this.overview = jsonObject.getString("overview");
     this.backdropPath = jsonObject.getString("backdrop_path");
     this.voteAverage = jsonObject.getDouble("vote_average");
-    this.isPopular = (this.voteAverage >= POPULAR_VOTE_THRESHOLD) ? true : false;
     this.releaseDate = jsonObject.getString("release_date");
 
     if (voteAverage >= POPULAR_VOTE_THRESHOLD) {
@@ -40,20 +41,9 @@ public class Movie implements Serializable {
     } else {
       rating = (float) voteAverage;
     }
-  }
 
-  public static ArrayList<Movie> fromJSONArray(JSONArray array) {
-    ArrayList<Movie> movieList = new ArrayList<>();
-    for (int i = 0; i < array.length(); i++) {
-      try {
-        Movie movie = new Movie(array.getJSONObject(i));
-        movieList.add(movie);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
-    }
-
-    return movieList;
+    this.isPopular = (this.voteAverage >= POPULAR_VOTE_THRESHOLD) ? true : false;
+    requestTrailer();
   }
 
   public String getId() {
@@ -92,7 +82,33 @@ public class Movie implements Serializable {
     return rating;
   }
 
-  public void setTrailer(Trailer trailer) {
+  public void requestTrailer() {
+    Handler handler = new Handler(Looper.getMainLooper());
+    handler.post(new Runnable() {
+      @Override
+      public void run() {
+        MovieCatalog movieCatalog = new MovieCatalog();
+        movieCatalog.getMovieTrailerList(id, new MovieCatalog.MovieCatalogHandler() {
+          @Override
+          public void onRequestSuccess(List requestList) {
+            Log.d(TAG, "Getting movie trailer list");
+
+            List<Trailer> trailerList = requestList;
+            if (trailerList != null && trailerList.size() > 0) {
+              setTrailer(trailerList.get(0));
+            }
+          }
+
+          @Override
+          public void onRequestFailure() {
+            // TODO: toast message or something...
+          }
+        });
+      }
+    });
+  }
+
+  private void setTrailer(Trailer trailer) {
     this.trailer = trailer;
   }
 

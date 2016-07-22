@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:padding="10dp"
-              android:orientation="vertical">
+              android:padding="10dp">
   <ImageView
       android:layout_width="match_parent"
       android:layout_height="@dimen/background_detail_height_portrait"
       android:id="@+id/movieImage"
+      tools:background="@android:color/darker_gray"
       tools:src="@drawable/movie_image_placeholder"/>
 
-</LinearLayout>
+  <ImageView
+      android:layout_width="80dp"
+      android:layout_height="80dp"
+      android:id="@+id/playImage"
+      android:layout_alignParentTop="true"
+      android:layout_centerHorizontal="true"
+      android:layout_alignTop="@+id/movieImage"
+      android:layout_alignBottom="@+id/movieImage"
+      android:src="@drawable/play"/>
+</RelativeLayout>
