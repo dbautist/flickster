@@ -12,13 +12,9 @@ import android.widget.TextView;
 
 import com.codepath.flickster.R;
 import com.codepath.flickster.models.Movie;
-import com.codepath.flickster.util.DeviceDimensionsHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class MovieArrayAdapter extends ArrayAdapter<Movie> {
   private static final String TAG = MovieArrayAdapter.class.getSimpleName();
@@ -32,7 +28,7 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
   @Override
   public int getItemViewType(int position) {
     Movie movie = getItem(position);
-    if (movie.getVoteAverage() >= 5) {
+    if (movie.isPopular()) {
       return TYPE_POPULAR_MOVIE;
     } else {
       return TYPE_MOVIE;
@@ -43,46 +39,48 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
   public View getView(int position, View convertView, ViewGroup parent) {
     // Get the data item for this position
     Movie movie = getItem(position);
-    ViewHolder viewHolder;
+    MovieViewHolder movieViewHolder;
 
-    Log.d(TAG, "======== getView position: " + position + " voteAverage: " + movie.getVoteAverage());
     if (convertView == null) {
       convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_movie, parent, false);
-      viewHolder = new ViewHolder(convertView);
-      convertView.setTag(viewHolder);
-    }
-    viewHolder = (ViewHolder) convertView.getTag();
+      movieViewHolder = new MovieViewHolder();
+      movieViewHolder.movieImage = (ImageView) convertView.findViewById(R.id.movieImage);
+      movieViewHolder.overviewTextView = (TextView) convertView.findViewById(R.id.overviewTextView);
+      movieViewHolder.titleTextView = (TextView) convertView.findViewById(R.id.titleTextView);
+      movieViewHolder.avgRatingTextView = (TextView) convertView.findViewById(R.id.avgRatingTextView);
 
-    viewHolder.movieImage.setImageResource(0);
+      convertView.setTag(movieViewHolder);
+    }
+
+    movieViewHolder = (MovieViewHolder) convertView.getTag();
+    movieViewHolder.movieImage.setImageResource(0);
+
     // Check orientation configuration and change the image accordingly
     String imagePath = movie.getPosterPath();
-    int defaultDpWidth = 120;
+    float defaultDpWidth = getContext().getResources().getDimension(R.dimen.poster_width);
     int orientation = getContext().getResources().getConfiguration().orientation;
     if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
       imagePath = movie.getBackdropPath();
-      defaultDpWidth = 400;
+      defaultDpWidth = getContext().getResources().getDimension(R.dimen.background_width);
+      Log.d(TAG, "ORIENTATION_LANDSCAPE: " + defaultDpWidth );
+    } else {
+      Log.d(TAG, "ORIENTATION_PORTRAIT: " + defaultDpWidth );
     }
 
-    int pxWidth = (int) DeviceDimensionsHelper.convertDpToPixel(defaultDpWidth, getContext());
-    Log.d(TAG, "====== defaultDpWidth " + defaultDpWidth + ", pxWidth " + pxWidth);
-    Picasso.with(getContext()).load(imagePath).resize(pxWidth, 0).placeholder(R.drawable.movie_image_placeholder).into(viewHolder.movieImage);
+    Picasso.with(getContext()).load(imagePath).resize((int)defaultDpWidth, 0).placeholder(R.drawable.movie_image_placeholder).into(movieViewHolder.movieImage);
 
-    viewHolder.titleText.setText(movie.getOriginalTitle());
-    viewHolder.overviewText.setText(movie.getOverview());
-
+    movieViewHolder.titleTextView.setText(movie.getOriginalTitle());
+    movieViewHolder.overviewTextView.setText(movie.getOverview());
+    if(movie.getVoteAverage() > 0) {
+      movieViewHolder.avgRatingTextView.setText("Rating: " + movie.getVoteAverage());
+    }
     return convertView;
   }
 
-  static class ViewHolder {
-    @BindView(R.id.movieImage)
+  private static class MovieViewHolder {
     ImageView movieImage;
-    @BindView(R.id.titleTextView)
-    TextView titleText;
-    @BindView(R.id.overviewTextView)
-    TextView overviewText;
-
-    public ViewHolder(View view) {
-      ButterKnife.bind(this, view);
-    }
+    TextView titleTextView;
+    TextView overviewTextView;
+    TextView avgRatingTextView;
   }
 }
