@@ -23,6 +23,8 @@ public class HttpService {
   }
 
   public void getResponse(String url) {
+    Log.d(TAG, "GET request to: " + url);
+
     AsyncHttpClient client = new AsyncHttpClient();
     client.get(url, new JsonHttpResponseHandler() {
       @Override

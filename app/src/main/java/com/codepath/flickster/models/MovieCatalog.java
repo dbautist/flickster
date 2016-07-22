@@ -15,9 +15,11 @@ import java.util.List;
 public class MovieCatalog {
   private static final String TAG = MovieCatalog.class.getSimpleName();
   private static final String NOW_PLAYING_URL = "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed";
+  private static final String MOVIE_TRALER_URL = "http://api.themoviedb.org/3/movie/%s/videos?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed";
 
   public interface MovieCatalogHandler {
     void onRequestSuccess(List<Movie> movieList);
+    void onRequestSuccess2(List<Trailer> trailerList);
     void onRequestFailure();
   }
 
@@ -49,7 +51,41 @@ public class MovieCatalog {
       }
     });
 
-    httpService.getResponse(NOW_PLAYING_URL);
+    httpService.getResponse(NOW_PLAYING_URL);  }
+
+  public void getMovieTrailerList(String movieId, final MovieCatalogHandler listener) {
+    String url = String.format(MOVIE_TRALER_URL, movieId);
+    HttpService httpService = new HttpService(new HttpService.HttpResponseListner() {
+      @Override
+      public void onRequestFinished(HttpResponse response) {
+        if (response != null) {
+          if (response.getStatus() == HttpResponse.Status.Success) {
+            try {
+              JSONObject jsonResponse = new JSONObject(response.getResponse());
+              JSONArray trailerJsonResults = jsonResponse.getJSONArray("results");
+              List<Trailer> trailerList = new ArrayList<>();
+              trailerList.addAll(Trailer.fromJSONArray(trailerJsonResults));
+              if (listener != null) {
+                listener.onRequestSuccess2(trailerList);
+              }
+            } catch (JSONException e) {
+              Log.d(TAG, "JSONException encountered: " + e.getMessage());
+              onRequestFailed(listener);
+            }
+          } else {
+            Log.d(TAG, "Error encountered when fetching the now playing movie list");
+            onRequestFailed(listener);
+          }
+        } else {
+          onRequestFailed(listener);
+        }
+      }
+    });
+
+    httpService.getResponse(url);  }
+
+  public void getMovieResultList(String url, final MovieCatalogHandler listener) {
+
   }
 
   private void onRequestFailed(MovieCatalogHandler listener) {

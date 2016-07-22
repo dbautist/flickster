@@ -13,6 +13,7 @@ import com.codepath.flickster.R;
 import com.codepath.flickster.adapters.MovieArrayAdapter;
 import com.codepath.flickster.models.Movie;
 import com.codepath.flickster.models.MovieCatalog;
+import com.codepath.flickster.models.Trailer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,11 @@ public class MovieActivity extends AppCompatActivity {
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Movie movie = adapter.getItem(position);
         if (movie != null) {
-          gotoMovieDetails(movie);
+          if (movie.isPopular()) {
+            getMovieQuickPlay(movie);
+          } else {
+            gotoMovieDetails(movie);
+          }
         }
       }
     });
@@ -89,6 +94,11 @@ public class MovieActivity extends AppCompatActivity {
       }
 
       @Override
+      public void onRequestSuccess2(List<Trailer> trailerList) {
+
+      }
+
+      @Override
       public void onRequestFailure() {
         // TODO: toast message or something...
       }
@@ -98,6 +108,33 @@ public class MovieActivity extends AppCompatActivity {
   private void gotoMovieDetails(Movie movie) {
     Intent intent = new Intent(this, MovieDetailsActivity.class);
     intent.putExtra("MOVIE", movie);
+    startActivity(intent);
+  }
+
+  private void getMovieQuickPlay(Movie movie) {
+    movieCatalog.getMovieTrailerList(movie.getId(), new MovieCatalog.MovieCatalogHandler() {
+      @Override
+      public void onRequestSuccess(List<Movie> movieList) {
+
+      }
+
+      @Override
+      public void onRequestSuccess2(List<Trailer> trailerList) {
+        if (trailerList != null && trailerList.size() > 0) {
+          gotoMovieQuickPlay(trailerList.get(0));
+        }
+      }
+
+      @Override
+      public void onRequestFailure() {
+
+      }
+    });
+  }
+
+  private void gotoMovieQuickPlay(Trailer trailer) {
+    Intent intent = new Intent(this, MovieQuickPlayActivity.class);
+    intent.putExtra("TRAILER", trailer);
     startActivity(intent);
   }
 }

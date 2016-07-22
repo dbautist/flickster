@@ -7,7 +7,7 @@
               android:orientation="vertical">
   <ImageView
       android:layout_width="match_parent"
-      android:layout_height="@dimen/background_detail_height_portrait"
+      android:layout_height="@dimen/background_detail_height_landscape"
       android:id="@+id/movieImage"
       tools:src="@drawable/movie_image_placeholder"/>
 

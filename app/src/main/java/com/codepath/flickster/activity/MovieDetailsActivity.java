@@ -3,6 +3,7 @@ package com.codepath.flickster.activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -13,7 +14,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MovieDetailsActivity extends AppCompatActivity{
+public class MovieDetailsActivity extends AppCompatActivity {
   private static final String TAG = MovieDetailsActivity.class.getSimpleName();
   private Movie mMovie;
 
@@ -31,6 +32,8 @@ public class MovieDetailsActivity extends AppCompatActivity{
   TextView overviewTextView;
   @BindView(R.id.releaseDateTextView)
   TextView releaseDateTextView;
+  @BindView(R.id.ratingBar)
+  RatingBar ratingBar;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +44,7 @@ public class MovieDetailsActivity extends AppCompatActivity{
     ButterKnife.bind(this);
 
     mMovie = (Movie) getIntent().getSerializableExtra("MOVIE");
-    if(mMovie != null) {
+    if (mMovie != null) {
       initMovieDetails();
     } else {
       // TODO: Error
@@ -57,6 +60,10 @@ public class MovieDetailsActivity extends AppCompatActivity{
     titleTextview.setText(mMovie.getOriginalTitle());
     overviewTextView.setText(mMovie.getOverview());
     releaseDateTextView.setText("Release date: " + mMovie.getReleaseDate());
+
+    if (mMovie.getRating() > 0) {
+      ratingBar.setRating(mMovie.getRating());
+    }
   }
 }
 

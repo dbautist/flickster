@@ -22,7 +22,13 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
   public static final int TYPE_POPULAR_MOVIE = 1;
 
   public MovieArrayAdapter(Context context, ArrayList<Movie> movieList) {
-    super(context, R.layout.item_movie, movieList);
+    super(context, 0, movieList);
+  }
+
+  // Total number of types is the number of enum values
+  @Override
+  public int getViewTypeCount() {
+    return 2;
   }
 
   @Override
@@ -38,46 +44,58 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
     // Get the data item for this position
-    Movie movie = getItem(position);
+    int type = getItemViewType(position);
     MovieViewHolder movieViewHolder;
 
     if (convertView == null) {
-      convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_movie, parent, false);
       movieViewHolder = new MovieViewHolder();
-      movieViewHolder.movieImage = (ImageView) convertView.findViewById(R.id.movieImage);
-      movieViewHolder.overviewTextView = (TextView) convertView.findViewById(R.id.overviewTextView);
-      movieViewHolder.titleTextView = (TextView) convertView.findViewById(R.id.titleTextView);
-      movieViewHolder.avgRatingTextView = (TextView) convertView.findViewById(R.id.avgRatingTextView);
 
+      if (type == TYPE_POPULAR_MOVIE) {
+        convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_popular_movie, null);
+        movieViewHolder.movieImage = (ImageView) convertView.findViewById(R.id.movieImage);
+      } else {
+        convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_movie, null);
+        movieViewHolder.movieImage = (ImageView) convertView.findViewById(R.id.movieImage);
+        movieViewHolder.overviewTextView = (TextView) convertView.findViewById(R.id.overviewTextView);
+        movieViewHolder.titleTextView = (TextView) convertView.findViewById(R.id.titleTextView);
+        movieViewHolder.avgRatingTextView = (TextView) convertView.findViewById(R.id.avgRatingTextView);
+      }
       convertView.setTag(movieViewHolder);
+    } else {
+      movieViewHolder = (MovieViewHolder) convertView.getTag();
     }
 
-    movieViewHolder = (MovieViewHolder) convertView.getTag();
-    movieViewHolder.movieImage.setImageResource(0);
-
-    // Check orientation configuration and change the image accordingly
+    Movie movie = getItem(position);
     String imagePath = movie.getPosterPath();
     float defaultDpWidth = getContext().getResources().getDimension(R.dimen.poster_width);
     int orientation = getContext().getResources().getConfiguration().orientation;
     if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
       imagePath = movie.getBackdropPath();
       defaultDpWidth = getContext().getResources().getDimension(R.dimen.background_width);
-      Log.d(TAG, "ORIENTATION_LANDSCAPE: " + defaultDpWidth );
+      Log.d(TAG, "ORIENTATION_LANDSCAPE: " + defaultDpWidth);
     } else {
-      Log.d(TAG, "ORIENTATION_PORTRAIT: " + defaultDpWidth );
+      Log.d(TAG, "ORIENTATION_PORTRAIT: " + defaultDpWidth);
     }
 
-    Picasso.with(getContext()).load(imagePath).resize((int)defaultDpWidth, 0).placeholder(R.drawable.movie_image_placeholder).into(movieViewHolder.movieImage);
+    if (type == TYPE_POPULAR_MOVIE) {
+      movieViewHolder.movieImage.setImageResource(0);
+      Picasso.with(getContext()).load(movie.getBackdropPath()).fit().into(movieViewHolder.movieImage);
+    } else {
+      movieViewHolder.movieImage.setImageResource(0);
+      // Check orientation configuration and change the image accordingly
+      Picasso.with(getContext()).load(imagePath).resize((int) defaultDpWidth, 0).placeholder(R.drawable.movie_image_placeholder).into(movieViewHolder.movieImage);
 
-    movieViewHolder.titleTextView.setText(movie.getOriginalTitle());
-    movieViewHolder.overviewTextView.setText(movie.getOverview());
-    if(movie.getVoteAverage() > 0) {
-      movieViewHolder.avgRatingTextView.setText("Rating: " + movie.getVoteAverage());
+      movieViewHolder.titleTextView.setText(movie.getOriginalTitle());
+      movieViewHolder.overviewTextView.setText(movie.getOverview());
+      if (movie.getVoteAverage() > 0) {
+        movieViewHolder.avgRatingTextView.setText("Rating: " + movie.getVoteAverage());
+      }
     }
+
     return convertView;
   }
 
-  private static class MovieViewHolder {
+  public static class MovieViewHolder {
     ImageView movieImage;
     TextView titleTextView;
     TextView overviewTextView;
