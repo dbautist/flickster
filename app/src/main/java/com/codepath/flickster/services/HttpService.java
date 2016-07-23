@@ -5,6 +5,7 @@ import android.util.Log;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
@@ -39,6 +40,15 @@ public class HttpService {
       @Override
       public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
         fireFailureResponse(responseString);
+      }
+
+      @Override
+      public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+        String errorMessage = "Unexpected failure";
+        if (errorResponse != null) {
+          errorMessage = errorResponse.toString();
+        }
+        fireFailureResponse(errorMessage);
       }
     });
   }

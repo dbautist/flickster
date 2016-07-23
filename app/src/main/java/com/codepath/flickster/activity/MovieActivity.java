@@ -41,13 +41,31 @@ public class MovieActivity extends AppCompatActivity {
     ButterKnife.bind(this);
 
     initSwipeRefreshLayout();
-    initMovieList();
-    getNowPlayingList();
+
+    if (savedInstanceState != null ) {
+      Log.d(TAG, "Restoring instance: movie list already initialized");
+      ArrayList<Movie> movieList = (ArrayList<Movie>) savedInstanceState.getSerializable("NOW_PLAYING_MOVIE_LIST");
+      initMovieList(movieList);
+    } else {
+      Log.d(TAG, "---------- onCreate: ---------- ");
+      initMovieList(new ArrayList<Movie>());
+      getNowPlayingList();
+    }
+
   }
 
-  private void initMovieList() {
+  // Save the movie list to avoid fetching from the server every time the configuration changes (e.g. phone rotation)
+  // http://guides.codepath.com/android/Handling-Configuration-Changes#saving-and-restoring-activity-state
+  public void onSaveInstanceState(Bundle savedState) {
+    super.onSaveInstanceState(savedState);
+
+    Log.d(TAG, "Saving state: movie list");
+    savedState.putSerializable("NOW_PLAYING_MOVIE_LIST", nowPlayingMovieList);
+  }
+
+  private void initMovieList(ArrayList<Movie> movieList) {
+    this.nowPlayingMovieList = movieList;
     movieCatalog = new MovieCatalog();
-    nowPlayingMovieList = new ArrayList<>();
     adapter = new MovieArrayAdapter(this, nowPlayingMovieList);
     movieListView.setAdapter(adapter);
 
@@ -75,10 +93,10 @@ public class MovieActivity extends AppCompatActivity {
     });
 
     // Configure the refreshing colors
-    swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-        android.R.color.holo_green_light,
-        android.R.color.holo_orange_light,
-        android.R.color.holo_red_light);
+    swipeContainer.setColorSchemeResources(R.color.primary_dark,
+        R.color.primary,
+        R.color.primary_light,
+        R.color.accent);
 
   }
 
@@ -101,6 +119,9 @@ public class MovieActivity extends AppCompatActivity {
       @Override
       public void onRequestFailure() {
         // TODO: toast message or something...
+        if (swipeContainer.isRefreshing()) {
+          swipeContainer.setRefreshing(false);
+        }
       }
     });
   }

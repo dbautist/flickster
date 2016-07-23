@@ -21,6 +21,7 @@ public class Movie implements JSONSerializable, Serializable {
   private String overview;
   private String backdropPath;
   private double voteAverage;
+  private double popularity;
   private boolean isPopular;
   private String releaseDate;
   private float rating;
@@ -34,6 +35,7 @@ public class Movie implements JSONSerializable, Serializable {
     this.overview = jsonObject.getString("overview");
     this.backdropPath = jsonObject.getString("backdrop_path");
     this.voteAverage = jsonObject.getDouble("vote_average");
+    this.popularity = jsonObject.getDouble("popularity");
     this.releaseDate = jsonObject.getString("release_date");
 
     if (voteAverage >= POPULAR_VOTE_THRESHOLD) {
@@ -83,27 +85,21 @@ public class Movie implements JSONSerializable, Serializable {
   }
 
   public void requestTrailer() {
-    Handler handler = new Handler(Looper.getMainLooper());
-    handler.post(new Runnable() {
+    MovieCatalog movieCatalog = new MovieCatalog();
+    movieCatalog.getMovieTrailerList(id, new MovieCatalog.MovieCatalogHandler() {
       @Override
-      public void run() {
-        MovieCatalog movieCatalog = new MovieCatalog();
-        movieCatalog.getMovieTrailerList(id, new MovieCatalog.MovieCatalogHandler() {
-          @Override
-          public void onRequestSuccess(List requestList) {
-            Log.d(TAG, "Getting movie trailer list");
+      public void onRequestSuccess(List requestList) {
+        Log.d(TAG, "Getting movie trailer list");
 
-            List<Trailer> trailerList = requestList;
-            if (trailerList != null && trailerList.size() > 0) {
-              setTrailer(trailerList.get(0));
-            }
-          }
+        List<Trailer> trailerList = requestList;
+        if (trailerList != null && trailerList.size() > 0) {
+          setTrailer(trailerList.get(0));
+        }
+      }
 
-          @Override
-          public void onRequestFailure() {
-            // TODO: toast message or something...
-          }
-        });
+      @Override
+      public void onRequestFailure() {
+        // TODO: toast message or something...
       }
     });
   }
@@ -114,6 +110,10 @@ public class Movie implements JSONSerializable, Serializable {
 
   public Trailer getTrailer() {
     return trailer;
+  }
+
+  public String getPopularity() {
+    return String.format("Popularity: %.2f%%", popularity);
   }
 
   private String getFullImagePath(String imagePath, String widthDimen) {

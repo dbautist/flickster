@@ -2,17 +2,14 @@ package com.codepath.flickster.activity;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.RatingBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.codepath.flickster.R;
 import com.codepath.flickster.databinding.ActivityMovieDetailsBinding;
 import com.codepath.flickster.models.Movie;
-import com.codepath.flickster.util.Config;
+import com.codepath.flickster.util.AppConstants;
+import com.codepath.flickster.util.PicassoViewHelper;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -52,7 +49,9 @@ public class MovieDetailsActivity extends YouTubeBaseActivity {
 
   private void initMovieDetails() {
     int posterDefaultWidth = (int) getResources().getDimension(R.dimen.poster_width);
-    Picasso.with(this).load(mMovie.getPosterPath()).resize(posterDefaultWidth, 0).into(posterImageView);
+    PicassoViewHelper picassoViewHelper = new PicassoViewHelper(this, mMovie.getPosterPath(), R.drawable.movie_image_placeholder);
+    picassoViewHelper.setRoundedCorner(AppConstants.DEFAULT_ROUNDED_CORNER_RADIUS, 0, null);
+    picassoViewHelper.getRequestCreator().resize(posterDefaultWidth, 0).into(posterImageView);
 
     if (mMovie.getTrailer() != null) {
       initMovieTrailer();
@@ -60,7 +59,7 @@ public class MovieDetailsActivity extends YouTubeBaseActivity {
   }
 
   private void initMovieTrailer() {
-    youtubePlayerView.initialize(Config.YOUTUBE_API_KEY, new YouTubePlayer.OnInitializedListener() {
+    youtubePlayerView.initialize(AppConstants.YOUTUBE_API_KEY, new YouTubePlayer.OnInitializedListener() {
       @Override
       public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
         youTubePlayer.cueVideo(mMovie.getTrailer().getKey());

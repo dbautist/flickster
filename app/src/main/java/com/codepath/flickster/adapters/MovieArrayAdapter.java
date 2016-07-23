@@ -8,10 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.codepath.flickster.R;
 import com.codepath.flickster.models.Movie;
+import com.codepath.flickster.util.AppConstants;
+import com.codepath.flickster.util.PicassoViewHelper;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -19,6 +23,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class MovieArrayAdapter extends ArrayAdapter<Movie> {
   private static final String TAG = MovieArrayAdapter.class.getSimpleName();
@@ -63,7 +68,7 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
       }
     }
 
-    Movie movie = getItem(position);
+    final Movie movie = getItem(position);
     String imagePath = movie.getPosterPath();
     float defaultDpWidth = getContext().getResources().getDimension(R.dimen.poster_width);
     int orientation = getContext().getResources().getConfiguration().orientation;
@@ -73,35 +78,50 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
       Log.d(TAG, "ORIENTATION_LANDSCAPE: " + defaultDpWidth);
     } else {
       Log.d(TAG, "ORIENTATION_PORTRAIT: " + defaultDpWidth);
+      if (movie.isPopular() ) {
+        imagePath = movie.getBackdropPath();
+      }
     }
+    PicassoViewHelper picassoViewHelper = new PicassoViewHelper(getContext(), imagePath, R.drawable.movie_image_placeholder);
 
     if (type == TYPE_POPULAR_MOVIE) {
       final PopularMovieViewHolder popularMovieViewHolder = (PopularMovieViewHolder) convertView.getTag();
       popularMovieViewHolder.playImage.setVisibility(View.GONE);
       popularMovieViewHolder.movieImage.setImageResource(0);
-      Picasso.with(getContext()).load(movie.getBackdropPath())
-          .fit().placeholder(R.drawable.movie_image_placeholder)
+
+      picassoViewHelper.setRoundedCorner(AppConstants.DEFAULT_ROUNDED_CORNER_RADIUS, 0, RoundedCornersTransformation.CornerType.TOP_RIGHT);
+      picassoViewHelper.setRoundedCorner(AppConstants.DEFAULT_ROUNDED_CORNER_RADIUS, 0, RoundedCornersTransformation.CornerType.TOP_LEFT);
+      picassoViewHelper.getRequestCreator().fit()
           .into(popularMovieViewHolder.movieImage, new Callback() {
             @Override
             public void onSuccess() {
               popularMovieViewHolder.playImage.setVisibility(View.VISIBLE);
+              popularMovieViewHolder.titleLayout.setVisibility(View.VISIBLE);
+              popularMovieViewHolder.titleText.setText(movie.getOriginalTitle());
             }
 
             @Override
             public void onError() {
               popularMovieViewHolder.playImage.setVisibility(View.GONE);
+              popularMovieViewHolder.titleLayout.setVisibility(View.GONE);
             }
           });
     } else {
       MovieViewHolder movieViewHolder = (MovieViewHolder) convertView.getTag();
       movieViewHolder.movieImage.setImageResource(0);
       // Check orientation configuration and change the image accordingly
-      Picasso.with(getContext()).load(imagePath).resize((int) defaultDpWidth, 0).placeholder(R.drawable.movie_image_placeholder).into(movieViewHolder.movieImage);
+      picassoViewHelper.setRoundedCorner(AppConstants.DEFAULT_ROUNDED_CORNER_RADIUS, 0, null);
+      picassoViewHelper.getRequestCreator()
+          .resize((int) defaultDpWidth, 0)
+          .into(movieViewHolder.movieImage);
 
       movieViewHolder.titleTextView.setText(movie.getOriginalTitle());
       movieViewHolder.overviewTextView.setText(movie.getOverview());
       if (movie.getVoteAverage() > 0) {
-        movieViewHolder.avgRatingTextView.setText("Rating: " + movie.getVoteAverage());
+        movieViewHolder.ratingBar.setVisibility(View.VISIBLE);
+        movieViewHolder.ratingBar.setRating(movie.getRating());
+      } else {
+        movieViewHolder.ratingBar.setVisibility(View.GONE);
       }
     }
 
@@ -115,8 +135,8 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
     TextView titleTextView;
     @BindView(R.id.overviewTextView)
     TextView overviewTextView;
-    @BindView(R.id.avgRatingTextView)
-    TextView avgRatingTextView;
+    @BindView(R.id.ratingBar)
+    RatingBar ratingBar;
 
     public MovieViewHolder(View view) {
       ButterKnife.bind(this, view);
@@ -128,6 +148,10 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
     ImageView movieImage;
     @BindView(R.id.playImage)
     ImageView playImage;
+    @BindView(R.id.titleLayout)
+    RelativeLayout titleLayout;
+    @BindView(R.id.titleText)
+    TextView titleText;
 
     public PopularMovieViewHolder(View view) {
       ButterKnife.bind(this, view);

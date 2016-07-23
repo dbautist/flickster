@@ -35,7 +35,7 @@ public class MovieCatalog {
               listener.onRequestSuccess(movieList);
             }
           } catch (JSONException e) {
-            Log.d(TAG, "Error encountered when fetching the now playing movie list");
+            Log.d(TAG, "JSONException: Error encountered when fetching the now playing movie list");
             onRequestFailed(listener);
           }
         } else {
@@ -62,7 +62,7 @@ public class MovieCatalog {
               listener.onRequestSuccess(trailerList);
             }
           } catch (JSONException e) {
-            Log.d(TAG, "Error encountered when fetching the movie trailer");
+            Log.d(TAG, "JSONException: Error encountered when fetching the movie trailer");
             onRequestFailed(listener);
           }
         } else {

@@ -14,12 +14,37 @@
 
   <ImageView
       android:id="@+id/playImage"
-      android:layout_width="80dp"
-      android:layout_height="80dp"
-      android:layout_alignBottom="@+id/movieImage"
+      android:layout_width="70dp"
+      android:layout_height="70dp"
+      android:layout_above="@+id/titleLayout"
       android:layout_alignParentTop="true"
       android:layout_alignTop="@+id/movieImage"
       android:layout_centerHorizontal="true"
       android:src="@drawable/play"
       android:visibility="gone"/>
+
+  <RelativeLayout
+      android:id="@+id/titleLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignBottom="@+id/movieImage"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
+      android:background="#BFB2EBF2">
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:padding="10dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        tools:text="Independence Day Resurgence"/>
+  </RelativeLayout>
+
+
 </RelativeLayout>

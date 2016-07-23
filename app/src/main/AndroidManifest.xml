@@ -19,8 +19,7 @@
     </activity>
     <activity android:name=".activity.MovieDetailsActivity"/>
     <activity
-        android:name=".activity.MovieQuickPlayActivity"
-        android:screenOrientation="landscape"/>
+        android:name=".activity.MovieQuickPlayActivity"/>
 
   </application>
 </manifest>

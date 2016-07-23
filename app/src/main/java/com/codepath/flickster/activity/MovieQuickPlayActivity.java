@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.codepath.flickster.R;
 import com.codepath.flickster.models.Trailer;
-import com.codepath.flickster.util.Config;
+import com.codepath.flickster.util.AppConstants;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -29,7 +29,7 @@ public class MovieQuickPlayActivity extends YouTubeBaseActivity {
 
     final Trailer trailer = (Trailer) getIntent().getSerializableExtra("TRAILER");
     if (trailer != null) {
-      youtubePlayerView.initialize(Config.YOUTUBE_API_KEY, new YouTubePlayer.OnInitializedListener() {
+      youtubePlayerView.initialize(AppConstants.YOUTUBE_API_KEY, new YouTubePlayer.OnInitializedListener() {
         @Override
         public void onInitializationSuccess(YouTubePlayer.Provider provider, final YouTubePlayer youTubePlayer, boolean b) {
           Log.d(TAG, "onInitializationSuccess");
