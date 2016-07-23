@@ -1,5 +1,6 @@
 package com.codepath.flickster.activity;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.codepath.flickster.R;
+import com.codepath.flickster.databinding.ActivityMovieDetailsBinding;
 import com.codepath.flickster.models.Movie;
 import com.codepath.flickster.util.Config;
 import com.google.android.youtube.player.YouTubeBaseActivity;
@@ -29,29 +31,19 @@ public class MovieDetailsActivity extends YouTubeBaseActivity {
   YouTubePlayerView youtubePlayerView;
   @BindView(R.id.posterImageView)
   ImageView posterImageView;
-  @BindView(R.id.titleTextview)
-  TextView titleTextview;
-  @BindView(R.id.bookmarkLayout)
-  RelativeLayout bookmarkLayout;
-  @BindView(R.id.notInterestedLayout)
-  RelativeLayout notInterestedLayout;
-  @BindView(R.id.overviewTextView)
-  TextView overviewTextView;
-  @BindView(R.id.releaseDateTextView)
-  TextView releaseDateTextView;
-  @BindView(R.id.ratingBar)
-  RatingBar ratingBar;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_movie_details);
 //    getSupportActionBar().hide();
 
+    ActivityMovieDetailsBinding binding = DataBindingUtil.setContentView(
+        this, R.layout.activity_movie_details);
     ButterKnife.bind(this);
 
     mMovie = (Movie) getIntent().getSerializableExtra("MOVIE");
     if (mMovie != null) {
+      binding.setMovie(mMovie);
       initMovieDetails();
     } else {
       // TODO: Error
@@ -61,14 +53,6 @@ public class MovieDetailsActivity extends YouTubeBaseActivity {
   private void initMovieDetails() {
     int posterDefaultWidth = (int) getResources().getDimension(R.dimen.poster_width);
     Picasso.with(this).load(mMovie.getPosterPath()).resize(posterDefaultWidth, 0).into(posterImageView);
-
-    titleTextview.setText(mMovie.getOriginalTitle());
-    overviewTextView.setText(mMovie.getOverview());
-    releaseDateTextView.setText("Release date: " + mMovie.getReleaseDate());
-
-    if (mMovie.getRating() > 0) {
-      ratingBar.setRating(mMovie.getRating());
-    }
 
     if (mMovie.getTrailer() != null) {
       initMovieTrailer();

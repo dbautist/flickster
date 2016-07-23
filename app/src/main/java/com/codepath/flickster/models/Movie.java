@@ -71,7 +71,7 @@ public class Movie implements JSONSerializable, Serializable {
   }
 
   public String getReleaseDate() {
-    return releaseDate;
+    return "Release date: " + releaseDate;
   }
 
   public boolean isPopular() {

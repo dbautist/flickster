@@ -1,155 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
 
-  <RelativeLayout
+  <data>
+
+    <import type="android.view.View"/>
+
+    <variable
+        name="movie"
+        type="com.codepath.flickster.models.Movie"/>
+  </data>
+
+  <ScrollView
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:paddingBottom="40dp">
+      android:layout_height="match_parent">
 
-    <com.google.android.youtube.player.YouTubePlayerView
-        android:id="@+id/youtubePlayerView"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/background_detail_height_landscape"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        tools:background="@color/primary_light"/>
-
-    <ImageView
-        android:id="@+id/posterImageView"
-        android:layout_width="@dimen/poster_width"
-        android:layout_height="@dimen/poster_height"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/youtubePlayerView"
-        android:layout_margin="15dp"
-        tools:background="@color/primary_dark"/>
-
-    <TextView
-        android:id="@+id/titleTextview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/youtubePlayerView"
-        android:layout_alignRight="@+id/youtubePlayerView"
-        android:layout_alignTop="@+id/posterImageView"
-        android:layout_marginRight="15dp"
-        android:layout_toRightOf="@+id/posterImageView"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:text="Star Trek Beyond"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/primary_dark"
-        android:textStyle="bold"/>
-
-    <LinearLayout
-        android:id="@+id/buttonLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/titleTextview"
-        android:layout_alignLeft="@+id/posterImageView"
-        android:layout_alignRight="@+id/titleTextview"
-        android:layout_alignStart="@+id/posterImageView"
-        android:layout_below="@+id/posterImageView"
-        android:layout_marginBottom="10dp"
-        android:orientation="horizontal">
-
-      <RelativeLayout
-          android:id="@+id/bookmarkLayout"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:background="@drawable/button_background"
-          android:layout_marginRight="5dp"
-          android:layout_weight="1">
-
-        <TextView
-            android:id="@+id/bookmarkButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/bookmarkImageView"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="7dp"
-            android:text="BOOKMARK"
-            android:textColor="@color/accent"/>
-
-        <ImageView
-            android:id="@+id/bookmarkImageView"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/bookmark"/>
-      </RelativeLayout>
-
-      <RelativeLayout
-          android:id="@+id/notInterestedLayout"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:background="@drawable/button_background"
-          android:layout_marginLeft="5dp"
-          android:layout_weight="1">
-
-        <TextView
-            android:id="@+id/notInterestedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/notInterestedImageView"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="7dp"
-            android:text="NOT INTERESTED"
-            android:textColor="@color/primary"/>
-
-        <ImageView
-            android:id="@+id/notInterestedImageView"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/xmark"/>
-      </RelativeLayout>
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/overviewTextView"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignEnd="@+id/titleTextview"
-        android:layout_alignLeft="@+id/posterImageView"
-        android:layout_alignRight="@+id/titleTextview"
-        android:layout_alignStart="@+id/posterImageView"
-        android:layout_below="@+id/buttonLayout"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        tools:text="We always knew they were coming back. Using recovered alien technology, the nations of Earth have collaborated on an immense defense program to protect the planet. But nothing can prepare us for the aliens’ advanced and unprecedented force. Only the ingenuity of a few brave men and women can bring our world back from the brink of extinction."/>
+        android:paddingBottom="40dp">
 
-    <RatingBar
-        android:id="@+id/ratingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/titleTextview"
-        android:layout_alignStart="@+id/titleTextview"
-        android:layout_below="@+id/titleTextview"
-        android:isIndicator="true"
-        android:layout_marginTop="10dp"
-        android:numStars="5"
-        android:rating="2.0"
-        android:stepSize="0.1"/>
+      <com.google.android.youtube.player.YouTubePlayerView
+          android:id="@+id/youtubePlayerView"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/background_detail_height_landscape"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentStart="true"
+          android:layout_alignParentTop="true"
+          tools:background="@color/primary_light"/>
 
-    <TextView
-        android:id="@+id/releaseDateTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/titleTextview"
-        android:layout_alignLeft="@+id/titleTextview"
-        android:layout_alignRight="@+id/titleTextview"
-        android:layout_alignStart="@+id/titleTextview"
-        android:layout_below="@+id/ratingBar"
-        android:ellipsize="none"
-        android:maxLines="2"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        tools:text="Release Date: July 7, 2016"/>
+      <ImageView
+          android:id="@+id/posterImageView"
+          android:layout_width="@dimen/poster_width"
+          android:layout_height="@dimen/poster_height"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentStart="true"
+          android:layout_below="@+id/youtubePlayerView"
+          android:layout_margin="15dp"
+          tools:background="@color/primary_dark"/>
 
-  </RelativeLayout>
-</ScrollView>
+      <TextView
+          android:id="@+id/titleTextview"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignEnd="@+id/youtubePlayerView"
+          android:layout_alignRight="@+id/youtubePlayerView"
+          android:layout_alignTop="@+id/posterImageView"
+          android:layout_marginRight="15dp"
+          android:layout_toRightOf="@+id/posterImageView"
+          android:ellipsize="end"
+          android:maxLines="2"
+          android:text="@{movie.originalTitle}"
+          android:textAppearance="?android:attr/textAppearanceLarge"
+          android:textColor="@color/primary_dark"
+          android:textStyle="bold"
+          tools:text="Star Trek Beyond"/>
+
+      <RatingBar
+          android:id="@+id/ratingBar"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignLeft="@+id/titleTextview"
+          android:layout_alignStart="@+id/titleTextview"
+          android:layout_below="@+id/titleTextview"
+          android:layout_marginTop="10dp"
+          android:isIndicator="true"
+          android:numStars="5"
+          android:rating="@{movie.rating}"
+          android:stepSize="0.1"
+          android:visibility="@{movie.rating > 0 ? View.VISIBLE: View.GONE}"
+          tools:rating="2.0"/>
+
+      <TextView
+          android:id="@+id/releaseDateTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignEnd="@+id/titleTextview"
+          android:layout_alignLeft="@+id/titleTextview"
+          android:layout_alignRight="@+id/titleTextview"
+          android:layout_alignStart="@+id/titleTextview"
+          android:layout_below="@+id/ratingBar"
+          android:ellipsize="none"
+          android:maxLines="2"
+          android:text="@{movie.releaseDate}"
+          android:textAppearance="?android:attr/textAppearanceMedium"
+          tools:text="Release Date: July 7, 2016"/>
+
+      <LinearLayout
+          android:id="@+id/buttonLayout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_alignEnd="@+id/titleTextview"
+          android:layout_alignLeft="@+id/posterImageView"
+          android:layout_alignRight="@+id/titleTextview"
+          android:layout_alignStart="@+id/posterImageView"
+          android:layout_below="@+id/posterImageView"
+          android:layout_marginBottom="10dp"
+          android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/bookmarkLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_background">
+
+          <TextView
+              android:id="@+id/bookmarkButton"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_below="@+id/bookmarkImageView"
+              android:layout_centerHorizontal="true"
+              android:layout_marginTop="7dp"
+              android:text="BOOKMARK"
+              android:textColor="@color/accent"/>
+
+          <ImageView
+              android:id="@+id/bookmarkImageView"
+              android:layout_width="20dp"
+              android:layout_height="20dp"
+              android:layout_alignParentTop="true"
+              android:layout_centerHorizontal="true"
+              android:src="@drawable/bookmark"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/notInterestedLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_background">
+
+          <TextView
+              android:id="@+id/notInterestedButton"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_below="@+id/notInterestedImageView"
+              android:layout_centerHorizontal="true"
+              android:layout_marginTop="7dp"
+              android:text="NOT INTERESTED"
+              android:textColor="@color/primary"/>
+
+          <ImageView
+              android:id="@+id/notInterestedImageView"
+              android:layout_width="20dp"
+              android:layout_height="20dp"
+              android:layout_alignParentTop="true"
+              android:layout_centerHorizontal="true"
+              android:src="@drawable/xmark"/>
+        </RelativeLayout>
+      </LinearLayout>
+
+      <TextView
+          android:id="@+id/overviewTextView"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_alignEnd="@+id/titleTextview"
+          android:layout_alignLeft="@+id/posterImageView"
+          android:layout_alignRight="@+id/titleTextview"
+          android:layout_alignStart="@+id/posterImageView"
+          android:layout_below="@+id/buttonLayout"
+          android:text="@{movie.overview}"
+          android:textAppearance="?android:attr/textAppearanceMedium"
+          tools:text="We always knew they were coming back. Using recovered alien technology, the nations of Earth have collaborated on an immense defense program to protect the planet. But nothing can prepare us for the aliens’ advanced and unprecedented force. Only the ingenuity of a few brave men and women can bring our world back from the brink of extinction."/>
+
+    </RelativeLayout>
+  </ScrollView>
+</layout>

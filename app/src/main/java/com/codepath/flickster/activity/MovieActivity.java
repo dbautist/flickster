@@ -18,6 +18,9 @@ import com.codepath.flickster.models.Trailer;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MovieActivity extends AppCompatActivity {
   private static final String TAG = MovieActivity.class.getSimpleName();
 
@@ -25,14 +28,17 @@ public class MovieActivity extends AppCompatActivity {
   private ArrayList<Movie> nowPlayingMovieList;
   private MovieArrayAdapter adapter;
 
-  private SwipeRefreshLayout swipeContainer;
-  private ListView movieListView;
+  @BindView(R.id.swipeContainer)
+  SwipeRefreshLayout swipeContainer;
+  @BindView(R.id.movieListView)
+  ListView movieListView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_movie);
     getSupportActionBar().setTitle("Now Playing");
+    ButterKnife.bind(this);
 
     initSwipeRefreshLayout();
     initMovieList();
@@ -40,7 +46,6 @@ public class MovieActivity extends AppCompatActivity {
   }
 
   private void initMovieList() {
-    movieListView = (ListView) findViewById(R.id.movieListView);
     movieCatalog = new MovieCatalog();
     nowPlayingMovieList = new ArrayList<>();
     adapter = new MovieArrayAdapter(this, nowPlayingMovieList);
@@ -62,7 +67,6 @@ public class MovieActivity extends AppCompatActivity {
   }
 
   private void initSwipeRefreshLayout() {
-    swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
     swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
       @Override
       public void onRefresh() {

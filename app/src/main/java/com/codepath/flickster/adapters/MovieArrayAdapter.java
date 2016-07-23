@@ -12,9 +12,13 @@ import android.widget.TextView;
 
 import com.codepath.flickster.R;
 import com.codepath.flickster.models.Movie;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MovieArrayAdapter extends ArrayAdapter<Movie> {
   private static final String TAG = MovieArrayAdapter.class.getSimpleName();
@@ -45,24 +49,18 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
   public View getView(int position, View convertView, ViewGroup parent) {
     // Get the data item for this position
     int type = getItemViewType(position);
-    MovieViewHolder movieViewHolder;
 
     if (convertView == null) {
-      movieViewHolder = new MovieViewHolder();
 
       if (type == TYPE_POPULAR_MOVIE) {
         convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_popular_movie, null);
-        movieViewHolder.movieImage = (ImageView) convertView.findViewById(R.id.movieImage);
+        PopularMovieViewHolder popularMovieViewHolder = new PopularMovieViewHolder(convertView);
+        convertView.setTag(popularMovieViewHolder);
       } else {
         convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_movie, null);
-        movieViewHolder.movieImage = (ImageView) convertView.findViewById(R.id.movieImage);
-        movieViewHolder.overviewTextView = (TextView) convertView.findViewById(R.id.overviewTextView);
-        movieViewHolder.titleTextView = (TextView) convertView.findViewById(R.id.titleTextView);
-        movieViewHolder.avgRatingTextView = (TextView) convertView.findViewById(R.id.avgRatingTextView);
+        MovieViewHolder movieViewHolder = new MovieViewHolder(convertView);
+        convertView.setTag(movieViewHolder);
       }
-      convertView.setTag(movieViewHolder);
-    } else {
-      movieViewHolder = (MovieViewHolder) convertView.getTag();
     }
 
     Movie movie = getItem(position);
@@ -78,9 +76,24 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
     }
 
     if (type == TYPE_POPULAR_MOVIE) {
-      movieViewHolder.movieImage.setImageResource(0);
-      Picasso.with(getContext()).load(movie.getBackdropPath()).fit().into(movieViewHolder.movieImage);
+      final PopularMovieViewHolder popularMovieViewHolder = (PopularMovieViewHolder) convertView.getTag();
+      popularMovieViewHolder.playImage.setVisibility(View.GONE);
+      popularMovieViewHolder.movieImage.setImageResource(0);
+      Picasso.with(getContext()).load(movie.getBackdropPath())
+          .fit().placeholder(R.drawable.movie_image_placeholder)
+          .into(popularMovieViewHolder.movieImage, new Callback() {
+            @Override
+            public void onSuccess() {
+              popularMovieViewHolder.playImage.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onError() {
+              popularMovieViewHolder.playImage.setVisibility(View.GONE);
+            }
+          });
     } else {
+      MovieViewHolder movieViewHolder = (MovieViewHolder) convertView.getTag();
       movieViewHolder.movieImage.setImageResource(0);
       // Check orientation configuration and change the image accordingly
       Picasso.with(getContext()).load(imagePath).resize((int) defaultDpWidth, 0).placeholder(R.drawable.movie_image_placeholder).into(movieViewHolder.movieImage);
@@ -96,9 +109,28 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
   }
 
   public static class MovieViewHolder {
+    @BindView(R.id.movieImage)
     ImageView movieImage;
+    @BindView(R.id.titleTextView)
     TextView titleTextView;
+    @BindView(R.id.overviewTextView)
     TextView overviewTextView;
+    @BindView(R.id.avgRatingTextView)
     TextView avgRatingTextView;
+
+    public MovieViewHolder(View view) {
+      ButterKnife.bind(this, view);
+    }
+  }
+
+  public static class PopularMovieViewHolder {
+    @BindView(R.id.movieImage)
+    ImageView movieImage;
+    @BindView(R.id.playImage)
+    ImageView playImage;
+
+    public PopularMovieViewHolder(View view) {
+      ButterKnife.bind(this, view);
+    }
   }
 }

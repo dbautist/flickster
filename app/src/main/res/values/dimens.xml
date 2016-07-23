@@ -11,5 +11,5 @@
   <dimen name="background_height">220dp</dimen>
 
   <dimen name="background_detail_height_portrait">200dp</dimen>
-  <dimen name="background_detail_height_landscape">330dp</dimen>
+  <dimen name="background_detail_height_landscape">300dp</dimen>
 </resources>
