@@ -14,7 +14,6 @@ import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
-import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,7 +48,7 @@ public class MovieDetailsActivity extends YouTubeBaseActivity {
 
   private void initMovieDetails() {
     int posterDefaultWidth = (int) getResources().getDimension(R.dimen.poster_width);
-    PicassoViewHelper picassoViewHelper = new PicassoViewHelper(this, mMovie.getPosterPath(), R.drawable.movie_image_placeholder);
+    PicassoViewHelper picassoViewHelper = new PicassoViewHelper(this, mMovie.getPosterPath(), R.drawable.poster_image_placeholder);
     picassoViewHelper.setRoundedCorner(AppConstants.DEFAULT_ROUNDED_CORNER_RADIUS, 0, null);
     picassoViewHelper.getRequestCreator().resize(posterDefaultWidth, 0).into(posterImageView);
 

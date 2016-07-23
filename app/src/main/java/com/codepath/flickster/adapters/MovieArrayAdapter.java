@@ -17,7 +17,6 @@ import com.codepath.flickster.models.Movie;
 import com.codepath.flickster.util.AppConstants;
 import com.codepath.flickster.util.PicassoViewHelper;
 import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -71,6 +70,7 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
     final Movie movie = getItem(position);
     String imagePath = movie.getPosterPath();
     float defaultDpWidth = getContext().getResources().getDimension(R.dimen.poster_width);
+    int placeHolderDrawable = R.drawable.poster_image_placeholder;
     int orientation = getContext().getResources().getConfiguration().orientation;
     if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
       imagePath = movie.getBackdropPath();
@@ -82,7 +82,7 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
         imagePath = movie.getBackdropPath();
       }
     }
-    PicassoViewHelper picassoViewHelper = new PicassoViewHelper(getContext(), imagePath, R.drawable.movie_image_placeholder);
+    PicassoViewHelper picassoViewHelper = new PicassoViewHelper(getContext(), imagePath, placeHolderDrawable);
 
     if (type == TYPE_POPULAR_MOVIE) {
       final PopularMovieViewHolder popularMovieViewHolder = (PopularMovieViewHolder) convertView.getTag();
@@ -108,13 +108,6 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
           });
     } else {
       MovieViewHolder movieViewHolder = (MovieViewHolder) convertView.getTag();
-      movieViewHolder.movieImage.setImageResource(0);
-      // Check orientation configuration and change the image accordingly
-      picassoViewHelper.setRoundedCorner(AppConstants.DEFAULT_ROUNDED_CORNER_RADIUS, 0, null);
-      picassoViewHelper.getRequestCreator()
-          .resize((int) defaultDpWidth, 0)
-          .into(movieViewHolder.movieImage);
-
       movieViewHolder.titleTextView.setText(movie.getOriginalTitle());
       movieViewHolder.overviewTextView.setText(movie.getOverview());
       if (movie.getVoteAverage() > 0) {
@@ -123,6 +116,13 @@ public class MovieArrayAdapter extends ArrayAdapter<Movie> {
       } else {
         movieViewHolder.ratingBar.setVisibility(View.GONE);
       }
+
+      movieViewHolder.movieImage.setImageResource(0);
+      // Check orientation configuration and change the image accordingly
+      picassoViewHelper.setRoundedCorner(AppConstants.DEFAULT_ROUNDED_CORNER_RADIUS, 0, null);
+      picassoViewHelper.getRequestCreator()
+          .resize((int) defaultDpWidth, 0)
+          .into(movieViewHolder.movieImage);
     }
 
     return convertView;
