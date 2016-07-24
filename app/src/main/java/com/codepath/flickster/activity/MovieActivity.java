@@ -4,16 +4,18 @@ import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.codepath.flickster.R;
-import com.codepath.flickster.adapters.MovieArrayAdapter;
+import com.codepath.flickster.adapters.MoviesAdapter;
 import com.codepath.flickster.models.Movie;
 import com.codepath.flickster.models.MovieCatalog;
 import com.codepath.flickster.models.Trailer;
+import com.codepath.flickster.util.DividerItemDecoration;
+import com.codepath.flickster.util.ItemClickSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +28,12 @@ public class MovieActivity extends AppCompatActivity {
 
   private MovieCatalog movieCatalog;
   private ArrayList<Movie> nowPlayingMovieList;
-  private MovieArrayAdapter adapter;
+  private MoviesAdapter adapter;
 
   @BindView(R.id.swipeContainer)
   SwipeRefreshLayout swipeContainer;
-  @BindView(R.id.movieListView)
-  ListView movieListView;
+  @BindView(R.id.movieRecyclerView)
+  RecyclerView movieRecyclerView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -66,22 +68,29 @@ public class MovieActivity extends AppCompatActivity {
   private void initMovieList(ArrayList<Movie> movieList) {
     this.nowPlayingMovieList = movieList;
     movieCatalog = new MovieCatalog();
-    adapter = new MovieArrayAdapter(this, nowPlayingMovieList);
-    movieListView.setAdapter(adapter);
+    adapter = new MoviesAdapter(this, movieList);
+    movieRecyclerView.setAdapter(adapter);
+    movieRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-    movieListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Movie movie = adapter.getItem(position);
-        if (movie != null) {
-          if (movie.isPopular()) {
-            getMovieQuickPlay(movie);
-          } else {
-            gotoMovieDetails(movie);
+    RecyclerView.ItemDecoration itemDecoration = new
+        DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
+    movieRecyclerView.addItemDecoration(itemDecoration);
+
+    ItemClickSupport.addTo(movieRecyclerView).setOnItemClickListener(
+        new ItemClickSupport.OnItemClickListener() {
+          @Override
+          public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+            Movie movie = nowPlayingMovieList.get(position);
+            if (movie != null) {
+              if (movie.isPopular()) {
+                getMovieQuickPlay(movie);
+              } else {
+                gotoMovieDetails(movie);
+              }
+            }
           }
         }
-      }
-    });
+    );
   }
 
   private void initSwipeRefreshLayout() {
@@ -107,9 +116,9 @@ public class MovieActivity extends AppCompatActivity {
         Log.d(TAG, "Getting now playing list");
 
         List<Movie> movieList = requestList;
-        adapter.clear();
+        nowPlayingMovieList.clear();
         nowPlayingMovieList.addAll(movieList);
-        adapter.notifyDataSetChanged();
+        adapter.notifyItemRangeChanged(0, nowPlayingMovieList.size());
 
         if (swipeContainer.isRefreshing()) {
           swipeContainer.setRefreshing(false);
