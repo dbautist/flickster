@@ -34,6 +34,7 @@ The following **bonus** features are implemented:
 
 The following **additional** features are implemented:
 * [x] Converted from ListView to RecyclerView to leverage data binding support module for each list item
+* [x] Implemented `onSaveInstanceState` to avoid fetching from the server every time the configuration changes (e.g. phone rotation)
 
 ## Video Walkthrough
 
