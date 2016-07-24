@@ -14,6 +14,7 @@ import com.codepath.flickster.adapters.MoviesAdapter;
 import com.codepath.flickster.models.Movie;
 import com.codepath.flickster.models.MovieCatalog;
 import com.codepath.flickster.models.Trailer;
+import com.codepath.flickster.util.AppConstants;
 import com.codepath.flickster.util.DividerItemDecoration;
 import com.codepath.flickster.util.ItemClickSupport;
 
@@ -51,10 +52,14 @@ public class MovieActivity extends AppCompatActivity {
       initMovieList(movieList);
     } else {
       Log.d(TAG, "Creating activity with NULL savedInstanceState");
-      initMovieList(new ArrayList<Movie>());
-      getNowPlayingList();
+      ArrayList<Movie> movieList = (ArrayList<Movie>) getIntent().getSerializableExtra(AppConstants.NOW_PLAYING_INTENT_EXTRA);
+      if (movieList == null || movieList.size() == 0) {
+        initMovieList(new ArrayList<Movie>());
+        getNowPlayingList();
+      } else {
+        initMovieList(movieList);
+      }
     }
-
   }
 
   // Save the movie list to avoid fetching from the server every time the configuration changes (e.g. phone rotation)
