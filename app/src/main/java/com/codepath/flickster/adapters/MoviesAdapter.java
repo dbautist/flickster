@@ -2,6 +2,7 @@ package com.codepath.flickster.adapters;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.codepath.flickster.R;
+import com.codepath.flickster.databinding.ItemMovieBinding;
+import com.codepath.flickster.databinding.ItemPopularMovieBinding;
 import com.codepath.flickster.models.Movie;
 import com.codepath.flickster.util.AppConstants;
 import com.codepath.flickster.util.PicassoViewHelper;
@@ -25,8 +28,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
-public class MoviesAdapter extends
-    RecyclerView.Adapter<MoviesAdapter.ViewHolder> implements View.OnClickListener{
+/*
+    Databinding Sources:
+      https://realm.io/news/data-binding-android-boyar-mount/
+      http://mutualmobile.com/posts/using-data-binding-api-in-recyclerview
+ */
+public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
   private static final String TAG = MoviesAdapter.class.getSimpleName();
   public static final int TYPE_MOVIE = 0;
   public static final int TYPE_POPULAR_MOVIE = 1;
@@ -51,23 +58,24 @@ public class MoviesAdapter extends
 
   @Override
   public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    Context context = parent.getContext();
-    LayoutInflater inflater = LayoutInflater.from(context);
-
+    ViewHolder viewHolder;
     if (viewType == TYPE_POPULAR_MOVIE) {
-      View movieView = inflater.inflate(R.layout.item_popular_movie, parent, false);
-      ViewHolder viewHolder = new PopularMovieViewHolder(movieView);
-      return viewHolder;
+      View view = LayoutInflater.from(parent.getContext())
+          .inflate(R.layout.item_popular_movie, parent, false);
+      viewHolder = new PopularMovieViewHolder(view);
     } else {
-      View movieView = inflater.inflate(R.layout.item_movie, parent, false);
-      ViewHolder viewHolder = new MovieViewHolder(movieView);
-      return viewHolder;
+      View view = LayoutInflater.from(parent.getContext())
+          .inflate(R.layout.item_movie, parent, false);
+      viewHolder = new MovieViewHolder(view);
     }
+
+    return viewHolder;
   }
 
   @Override
   public void onBindViewHolder(ViewHolder holder, int position) {
     final Movie movie = mMovieList.get(position);
+
     String imagePath = movie.getPosterPath();
     float defaultDpWidth = getContext().getResources().getDimension(R.dimen.poster_width);
     int placeHolderDrawable = R.drawable.poster_image_placeholder;
@@ -84,10 +92,11 @@ public class MoviesAdapter extends
     }
 
     PicassoViewHelper picassoViewHelper = new PicassoViewHelper(getContext(), imagePath, placeHolderDrawable);
-
     int type = getItemViewType(position);
     if (type == TYPE_POPULAR_MOVIE) {
       final PopularMovieViewHolder popularMovieViewHolder = (PopularMovieViewHolder) holder;
+      popularMovieViewHolder.bindTo(movie);
+
       popularMovieViewHolder.playImage.setVisibility(View.GONE);
       popularMovieViewHolder.movieImage.setImageResource(0);
 
@@ -110,14 +119,7 @@ public class MoviesAdapter extends
           });
     } else {
       MovieViewHolder movieViewHolder = (MovieViewHolder) holder;
-      movieViewHolder.titleTextView.setText(movie.getOriginalTitle());
-      movieViewHolder.overviewTextView.setText(movie.getOverview());
-      if (movie.getVoteAverage() > 0) {
-        movieViewHolder.ratingBar.setVisibility(View.VISIBLE);
-        movieViewHolder.ratingBar.setRating(movie.getRating());
-      } else {
-        movieViewHolder.ratingBar.setVisibility(View.GONE);
-      }
+      movieViewHolder.bindTo(movie);
 
       movieViewHolder.movieImage.setImageResource(0);
       // Check orientation configuration and change the image accordingly
@@ -137,18 +139,17 @@ public class MoviesAdapter extends
     return mContext;
   }
 
-  @Override
-  public void onClick(View view) {
-  }
-
   public static class ViewHolder extends RecyclerView.ViewHolder {
-    public ViewHolder(View itemView) {
-      super(itemView);
-      ButterKnife.bind(this, itemView);
+
+    protected ViewHolder(View view) {
+      super(view);
+      ButterKnife.bind(this, view);
     }
   }
 
   public static class MovieViewHolder extends ViewHolder{
+    private ItemMovieBinding mBinding;
+
     @BindView(R.id.movieImage)
     ImageView movieImage;
     @BindView(R.id.titleTextView)
@@ -158,12 +159,20 @@ public class MoviesAdapter extends
     @BindView(R.id.ratingBar)
     RatingBar ratingBar;
 
-    public MovieViewHolder(View view) {
+    private MovieViewHolder(View view) {
       super(view);
+      this.mBinding = DataBindingUtil.bind(view);
+    }
+
+    public void bindTo(Movie movie) {
+      mBinding.setMovie(movie);
+      mBinding.executePendingBindings();
     }
   }
 
   public static class PopularMovieViewHolder extends ViewHolder{
+    private ItemPopularMovieBinding mBinding;
+
     @BindView(R.id.movieImage)
     ImageView movieImage;
     @BindView(R.id.playImage)
@@ -175,6 +184,12 @@ public class MoviesAdapter extends
 
     public PopularMovieViewHolder(View view) {
       super(view);
+      mBinding = DataBindingUtil.bind(view);
+    }
+
+    public void bindTo(Movie movie) {
+      mBinding.setMovie(movie);
+      mBinding.executePendingBindings();
     }
   }
 }

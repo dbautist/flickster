@@ -1,51 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/white"
-                android:padding="10dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
 
-  <ImageView
-      android:id="@+id/movieImage"
-      android:layout_width="match_parent"
-      android:layout_height="@dimen/background_detail_height_portrait"
-      tools:background="@android:color/darker_gray"
-      tools:src="@drawable/movie_image_placeholder"/>
+  <data>
 
-  <ImageView
-      android:id="@+id/playImage"
-      android:layout_width="70dp"
-      android:layout_height="70dp"
-      android:layout_above="@+id/titleLayout"
-      android:layout_alignParentTop="true"
-      android:layout_alignTop="@+id/movieImage"
-      android:layout_centerHorizontal="true"
-      android:src="@drawable/play"
-      android:visibility="gone"/>
+    <import type="android.view.View"/>
+
+    <variable
+        name="movie"
+        type="com.codepath.flickster.models.Movie"/>
+  </data>
 
   <RelativeLayout
-      android:id="@+id/titleLayout"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignBottom="@+id/movieImage"
-      android:layout_alignParentLeft="true"
-      android:layout_alignParentStart="true"
-      android:background="#BFB2EBF2">
+      android:layout_height="match_parent"
+      android:background="@android:color/white"
+      android:padding="10dp">
 
-    <TextView
-        android:id="@+id/titleText"
+    <ImageView
+        android:id="@+id/movieImage"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/background_detail_height_portrait"
+        tools:background="@android:color/darker_gray"
+        tools:src="@drawable/movie_image_placeholder"/>
+
+    <ImageView
+        android:id="@+id/playImage"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_above="@+id/titleLayout"
+        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/movieImage"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/play"
+        android:visibility="gone"/>
+
+    <RelativeLayout
+        android:id="@+id/titleLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:padding="10dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"
-        tools:text="Independence Day Resurgence"/>
+        android:layout_alignBottom="@+id/movieImage"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="#BFB2EBF2">
+
+      <TextView
+          android:id="@+id/titleText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:ellipsize="end"
+          android:maxLines="1"
+          android:padding="10dp"
+          android:textAppearance="?android:attr/textAppearanceMedium"
+          android:textColor="@android:color/white"
+          android:textStyle="bold"
+          android:text="@{movie.originalTitle}"
+          tools:text="Independence Day Resurgence"/>
+    </RelativeLayout>
   </RelativeLayout>
-
-
-</RelativeLayout>
+</layout>
