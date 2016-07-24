@@ -3,7 +3,7 @@
 
 **Flickster** shows the latest movies currently playing in theaters. The app utilizes the Movie Database API to display images and basic information about these movies to the user.
 
-Time spent: **x** hours spent in total
+Time spent: **16** hours spent in total
 
 ## User Stories
 
@@ -22,7 +22,6 @@ The following **optional** features are implemented:
 * [x] Improved the user interface through styling and coloring.
 
 The following **bonus** features are implemented:
-
 * [x] Allow user to view details of the movie including ratings and popularity within a separate activity or dialog fragment.
 * [x] When viewing a popular movie (i.e. a movie voted for more than 5 stars) the video should show the full backdrop image as the layout.  Uses [Heterogenous ListViews](http://guides.codepath.com/android/Implementing-a-Heterogenous-ListView) or [Heterogenous RecyclerView](http://guides.codepath.com/android/Heterogenous-Layouts-inside-RecyclerView) to show different layouts.
 * [x] Allow video trailers to be played in full-screen using the YouTubePlayerView.
@@ -34,20 +33,20 @@ The following **bonus** features are implemented:
 * [x] Apply rounded corners for the poster or background images using [Picasso transformations](https://guides.codepath.com/android/Displaying-Images-with-the-Picasso-Library#other-transformations)
 
 The following **additional** features are implemented:
-
-* [ ] List anything else that you can get done to improve the app functionality!
+* [x] Converted from ListView to RecyclerView to leverage data binding support module for each list item
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
-
-GIF created with [LiceCap](http://www.cockos.com/licecap/).
+![Flickster Portrait Walkthrough](flickster_video_portrait.gif)
+![Flickster Landscape Walkthrough](flickster_video_landscape.gif)
 
 ## Notes
 
 Describe any challenges encountered while building the app.
+* Getting the images at the right size was tricky
+* Converting MovieActivityDetails to leverage data binding was pretty straightforward but converting from ArrayAdapter to RecyclerView.Adapter to leverage data binding was tricky; there also wasn't a lot of examples available.
 
 ## Open-source libraries used
 
