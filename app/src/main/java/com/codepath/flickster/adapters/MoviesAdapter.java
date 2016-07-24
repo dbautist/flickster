@@ -78,7 +78,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
     String imagePath = movie.getPosterPath();
     float defaultDpWidth = getContext().getResources().getDimension(R.dimen.poster_width);
-    int placeHolderDrawable = R.drawable.poster_image_placeholder;
     int orientation = getContext().getResources().getConfiguration().orientation;
     if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
       imagePath = movie.getBackdropPath();
@@ -91,7 +90,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
       }
     }
 
-    PicassoViewHelper picassoViewHelper = new PicassoViewHelper(getContext(), imagePath, placeHolderDrawable);
+    PicassoViewHelper picassoViewHelper = new PicassoViewHelper(getContext(), imagePath, R.drawable.poster_image_placeholder);
     int type = getItemViewType(position);
     if (type == TYPE_POPULAR_MOVIE) {
       final PopularMovieViewHolder popularMovieViewHolder = (PopularMovieViewHolder) holder;
@@ -108,7 +107,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             public void onSuccess() {
               popularMovieViewHolder.playImage.setVisibility(View.VISIBLE);
               popularMovieViewHolder.titleLayout.setVisibility(View.VISIBLE);
-              popularMovieViewHolder.titleText.setText(movie.getOriginalTitle());
             }
 
             @Override
@@ -149,15 +147,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
   public static class MovieViewHolder extends ViewHolder{
     private ItemMovieBinding mBinding;
-
     @BindView(R.id.movieImage)
     ImageView movieImage;
-    @BindView(R.id.titleTextView)
-    TextView titleTextView;
-    @BindView(R.id.overviewTextView)
-    TextView overviewTextView;
-    @BindView(R.id.ratingBar)
-    RatingBar ratingBar;
 
     private MovieViewHolder(View view) {
       super(view);
@@ -179,8 +170,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     ImageView playImage;
     @BindView(R.id.titleLayout)
     RelativeLayout titleLayout;
-    @BindView(R.id.titleText)
-    TextView titleText;
 
     public PopularMovieViewHolder(View view) {
       super(view);

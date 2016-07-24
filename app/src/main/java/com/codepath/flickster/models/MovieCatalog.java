@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.codepath.flickster.services.HttpResponse;
 import com.codepath.flickster.services.HttpService;
-import com.codepath.flickster.util.JSONDeserializer;
+import com.codepath.flickster.services.JSONDeserializer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,7 +23,7 @@ public class MovieCatalog {
   }
 
   public void getNowPlayingMovieList(final MovieCatalogHandler listener) {
-    HttpService httpService = new HttpService(new HttpService.HttpResponseListner() {
+    HttpService httpService = new HttpService(new HttpService.HttpResponseListener() {
       @Override
       public void onRequestFinished(HttpResponse response) {
         if (response != null && response.getStatus() == HttpResponse.Status.Success) {
@@ -50,7 +50,7 @@ public class MovieCatalog {
 
   public void getMovieTrailerList(String movieId, final MovieCatalogHandler listener) {
     String url = String.format(MOVIE_TRAILER_URL, movieId);
-    HttpService httpService = new HttpService(new HttpService.HttpResponseListner() {
+    HttpService httpService = new HttpService(new HttpService.HttpResponseListener() {
       @Override
       public void onRequestFinished(HttpResponse response) {
         if (response != null && response.getStatus() == HttpResponse.Status.Success) {

@@ -72,7 +72,7 @@
           tools:rating="2.0"/>
 
       <TextView
-          android:id="@+id/releaseDateTextView"
+          android:id="@+id/popularityTextView"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignEnd="@+id/titleTextview"
@@ -80,6 +80,20 @@
           android:layout_alignRight="@+id/titleTextview"
           android:layout_alignStart="@+id/titleTextview"
           android:layout_below="@+id/ratingBar"
+          android:layout_margin="2dp"
+          android:text="@{movie.popularity}"
+          android:textAppearance="?android:attr/textAppearanceMedium"
+          tools:text="Popularity: 10%"/>
+
+      <TextView
+          android:id="@+id/releaseDateTextView"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignEnd="@+id/titleTextview"
+          android:layout_alignLeft="@+id/titleTextview"
+          android:layout_alignRight="@+id/titleTextview"
+          android:layout_alignStart="@+id/titleTextview"
+          android:layout_below="@+id/popularityTextView"
           android:ellipsize="none"
           android:maxLines="2"
           android:text="@{movie.releaseDate}"

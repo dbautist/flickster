@@ -93,7 +93,13 @@ public class Movie implements JSONSerializable, Serializable {
 
         List<Trailer> trailerList = requestList;
         if (trailerList != null && trailerList.size() > 0) {
-          setTrailer(trailerList.get(0));
+          for (Trailer trailer : trailerList) {
+            // just grab the first with site=YouTube
+            if (trailer.getSite() != null && trailer.getSite().compareToIgnoreCase("YouTube") == 0){
+              setTrailer(trailer);
+              return;
+            }
+          }
         }
       }
 

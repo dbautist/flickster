@@ -5,7 +5,6 @@ import android.util.Log;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
@@ -13,13 +12,13 @@ import cz.msebera.android.httpclient.Header;
 public class HttpService {
   private static final String TAG = HttpService.class.getSimpleName();
 
-  public interface HttpResponseListner {
+  public interface HttpResponseListener {
     void onRequestFinished(HttpResponse response);
   }
 
-  private HttpResponseListner listener;
+  private HttpResponseListener listener;
 
-  public HttpService(HttpResponseListner listener) {
+  public HttpService(HttpResponseListener listener) {
     this.listener = listener;
   }
 

@@ -39,17 +39,18 @@ public class MovieActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_movie);
-    getSupportActionBar().setTitle("Now Playing");
     ButterKnife.bind(this);
+
+    getSupportActionBar().setTitle("Now Playing");
 
     initSwipeRefreshLayout();
 
     if (savedInstanceState != null ) {
-      Log.d(TAG, "Restoring instance: movie list already initialized");
+      Log.d(TAG, "Restoring saved instance: movie list already initialized");
       ArrayList<Movie> movieList = (ArrayList<Movie>) savedInstanceState.getSerializable("NOW_PLAYING_MOVIE_LIST");
       initMovieList(movieList);
     } else {
-      Log.d(TAG, "---------- onCreate: ---------- ");
+      Log.d(TAG, "Creating activity with NULL savedInstanceState");
       initMovieList(new ArrayList<Movie>());
       getNowPlayingList();
     }
@@ -142,24 +143,27 @@ public class MovieActivity extends AppCompatActivity {
   }
 
   private void getMovieQuickPlay(Movie movie) {
-    Log.d(TAG, "Fetching movie trailer on listItemClick");
+    if (movie.getTrailer() != null) {
+      gotoMovieQuickPlay(movie.getTrailer());
+    } else {
+      Log.d(TAG, "Fetching movie trailer on listItemClick");
+      movieCatalog.getMovieTrailerList(movie.getId(), new MovieCatalog.MovieCatalogHandler() {
+        @Override
+        public void onRequestSuccess(List requestList) {
+          Log.d(TAG, "Getting movie trailer list");
 
-    movieCatalog.getMovieTrailerList(movie.getId(), new MovieCatalog.MovieCatalogHandler() {
-      @Override
-      public void onRequestSuccess(List requestList) {
-        Log.d(TAG, "Getting movie trailer list");
-
-        List<Trailer> trailerList = requestList;
-        if (trailerList != null && trailerList.size() > 0) {
-          gotoMovieQuickPlay(trailerList.get(0));
+          List<Trailer> trailerList = requestList;
+          if (trailerList != null && trailerList.size() > 0) {
+            gotoMovieQuickPlay(trailerList.get(0));
+          }
         }
-      }
 
-      @Override
-      public void onRequestFailure() {
-        // TODO: toast message or something...
-      }
-    });
+        @Override
+        public void onRequestFailure() {
+          // TODO: toast message or something...
+        }
+      });
+    }
   }
 
   private void gotoMovieQuickPlay(Trailer trailer) {

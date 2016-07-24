@@ -7,6 +7,9 @@ import com.squareup.picasso.RequestCreator;
 
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
+/*
+    Helper class when loading images using Picasso
+ */
 public class PicassoViewHelper {
   private Picasso mPicasso;
   private RequestCreator requestCreator;

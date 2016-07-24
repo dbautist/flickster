@@ -1,4 +1,4 @@
-package com.codepath.flickster.util;
+package com.codepath.flickster.services;
 
 import android.util.Log;
 
